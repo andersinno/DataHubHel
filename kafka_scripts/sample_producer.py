@@ -48,7 +48,8 @@ sample_data = {
     'thing': {
         'location': [62.238472, 25.751953],
         'thing_name': 'Ground Floor moniting system'
-    }
+    },
+    'datastream': 1
 }
 
 

@@ -77,7 +77,10 @@ def _create_sensor_name_keyed_stream():
         f" RESULTS->OVERLOAD AS OVERLOAD,"
         f" THING->THING_NAME AS THING_NAME,"
         f" THING->LOCATION[0] AS LON,"
-        f" THING->LOCATION[1] AS LAT"
+        f" THING->LOCATION[1] AS LAT,"
+        f" TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss.SSS') AS TIME,"
+        f" ROWTIME AS ID,"
+        f" DATASTREAM"
         f" FROM {constants.NOISE_STREAM}"
         f" PARTITION BY SENSOR_NAME;"
     )

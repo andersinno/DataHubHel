@@ -80,6 +80,10 @@
                         }
                     ]
                 }
+            },
+            {
+                "name": "datastream",
+                "type": "int"
             }
         ]
 }
