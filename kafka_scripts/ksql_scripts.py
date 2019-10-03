@@ -78,8 +78,7 @@ def _create_sensor_name_keyed_stream():
         f" THING->THING_NAME AS THING_NAME,"
         f" THING->LOCATION[0] AS LON,"
         f" THING->LOCATION[1] AS LAT,"
-        f" TIMESTAMPTOSTRING(ROWTIME, 'yyyy-MM-dd HH:mm:ss.SSS') AS TIME,"
-        f" ROWTIME AS ID,"
+        f" ROWTIME AS TIME,"
         f" DATASTREAM"
         f" FROM {constants.NOISE_STREAM}"
         f" PARTITION BY SENSOR_NAME;"
@@ -123,7 +122,7 @@ def _create_loud_noise_stream():
     command = (
         f"CREATE STREAM {constants.LOUD_NOISE_TOPIC}"
         f" AS SELECT SENSOR_NAME AS SENSOR_NAME,"
-        f" LEVEL, BATTERY, LOCATION[0] AS LON,"
+        f" LEVEL, BATTERY, TIME, LOCATION[0] AS LON,"
         f" LOCATION[1] AS LAT from {constants.NOISE_STREAM}"
         f" WHERE level > 4.0 PARTITION BY sensor_name;"
     )
