@@ -1,6 +1,7 @@
 version: '3'
 services:
   sts:
+    hostname: sts
     build: sts
     ports:
     - "8080:8080"
@@ -11,3 +12,7 @@ services:
     build: mqttbroker
     ports:
     - "1883:1883"
+networks:
+  default:
+    external:
+      name: datahubhel_default
