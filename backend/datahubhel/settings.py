@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     'service',
     'dhh_auth',
     'ta120_adapter',
+    'noise_sensor_api',
 ]
 
 MIDDLEWARE = [
