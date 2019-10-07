@@ -36,7 +36,17 @@ TUNNISTAMO_ISSUER_URL = env.str('TUNNISTAMO_ISSUER_URL', default=(
     'http://localhost:8000/openid' if TIER == 'dev' else
     'https://api.hel.fi/sso/openid'))
 
-DATABASES = {'default': env.db()}
+DATABASES = {
+    'default': env.db(),
+    'kafka_noise_db': {
+        'NAME': 'noisedata',
+        'HOST': 'kafka-sink-db',
+        'ENGINE': 'django.db.backends.postgresql',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
+    }
+}
+
 CACHES = {'default': env.cache()}
 vars().update(env.email_url())  # EMAIL_BACKEND, EMAIL_HOST, etc.
 
@@ -196,4 +206,4 @@ LOGGING = {
 }
 
 STA_VERSION = 'v1.0'
-GATEKEEPER_STS_BASE_URL = 'http://localhost:8080/FROST-Server'
+GATEKEEPER_STS_BASE_URL = 'http://sts:8080/FROST-Server'
