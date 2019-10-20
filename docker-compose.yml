@@ -159,6 +159,17 @@ services:
     depends_on:
       - elasticsearch
 
+  kafka-poc:
+    build:
+      context: ./kafka_scripts
+    volumes:
+      - ./kafka_scripts:/app/kafka_scripts
+    environment:
+      build_target: ${BUILD_TARGET:-development}
+    env_file:
+      - ./kafka_scripts/env.${BUILD_TARGET:-development}
+    command: bash -c "python /app/kafka_scripts/load_kafka_connectors.py"
+
 volumes:
   elasticsearch-data:
   kafka-sink-db-data:
