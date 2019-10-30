@@ -107,7 +107,7 @@ def test_expanded_observation_returns_datastream_details(api_staff_client):
     assert response.status_code == HTTP_200_OK
     assert type(json_response['datastream']) == dict
     assert sorted(json_response['datastream'].keys()) == sorted(
-        ['id', 'thing', 'sts_id', 'name', 'description', 'owner'])
+        ['id', 'thing', 'sensor', 'sts_id', 'name', 'description', 'owner'])
 
 
 @pytest.mark.django_db

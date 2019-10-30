@@ -88,7 +88,7 @@ def get_kafka_producer() -> confluent_kafka.avro.AvroProducer:
             {"name": "id", "type": "string"},
             {"name": "time", "type": ["null", "long"],
              "logicalType": "timestamp-millis"},
-            {"name": "name", "type": "string"},
+            {"name": "datastream", "type": "long"},
             {"name": "value", "type": "string"}
         ]
     }))

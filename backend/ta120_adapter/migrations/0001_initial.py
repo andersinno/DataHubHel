@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('datahubhel', '0002_sensor'),
+        ('datahubhel', '0001_initial'),
     ]
 
     operations = [

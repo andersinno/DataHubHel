@@ -2,7 +2,7 @@ import datetime
 
 from django.contrib.auth import get_user_model
 
-from datahubhel.core.models import Datastream, Thing
+from datahubhel.core.models import Datastream, Sensor, Thing
 from datahubhel.sta.models import Observation
 
 
@@ -23,10 +23,19 @@ def get_thing(num=1):
         })[0]
 
 
-def get_datastream(num=1, thing=None):
+def get_sensor(num=1):
+    return Sensor.objects.get_or_create(
+        sensor_id=str(num), defaults={
+            'thing': get_thing(num=num),
+            'name': f'Sensor {num}',
+        })[0]
+
+
+def get_datastream(num=1, thing=None, sensor=None):
     return Datastream.objects.get_or_create(
         sts_id=num, defaults={
             'thing': thing or get_thing(),
+            'sensor': sensor or get_sensor(),
             'name': 'Datastream{}'.format(num),
         })[0]
 
