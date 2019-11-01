@@ -67,7 +67,7 @@ class Endpoint(generics.GenericAPIView):
         ids = iter(generate_ids())
         for (prop_key, prop_value) in data.items():
             (name, serializer) = PROPERTIES[prop_key]
-            producer.produce(topic=TOPIC, key=sensor.sensor_id, value={
+            producer.produce(topic=TOPIC, key=sensor.identifier, value={
                 'id': next(ids),
                 'time': event_time,
                 'datastream': datastreams[prop_key],

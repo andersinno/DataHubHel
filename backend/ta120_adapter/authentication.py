@@ -24,20 +24,20 @@ class SensorKeyAuthentication(BaseAuthentication):
     queryset = TA120Sensor.objects.all()
 
     def authenticate(self, request):
-        (sensor_id, key) = self.get_credentials(request)
-        return self.authenticate_credentials(sensor_id, key)
+        (identifier, key) = self.get_credentials(request)
+        return self.authenticate_credentials(identifier, key)
 
     def get_credentials(self, request):
         parser = AuthParametersSerializer(data=request.query_params)
         if not parser.is_valid():
             raise AuthenticationFailed(_('Unable to extract credentials'))
 
-        sensor_id = parser.validated_data['i']
+        identifier = parser.validated_data['i']
         key = parser.validated_data['k']
-        return (sensor_id, key)
+        return (identifier, key)
 
-    def authenticate_credentials(self, sensor_id, key):
-        sensor = self.queryset.filter(sensor_id=sensor_id).first()
+    def authenticate_credentials(self, identifier, key):
+        sensor = self.queryset.filter(identifier=identifier).first()
         correct_key = sensor.key if sensor else ''
         if hmac.compare_digest(correct_key, key) and correct_key:
             return (SensorUser(sensor), sensor)

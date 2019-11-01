@@ -9,7 +9,8 @@ class Property(NamedTuple):
     description: str
 
 
-# Map from property keys to labels, e.g. "n" is mapped to "level"
+# Map from property keys to properties "n" is mapped to
+# Property("n", "level", "sound pressure level")
 DATA_PROPERTIES: Mapping[str, Property] = {
     key: Property(key, field.label, field.help_text)  # type: ignore
     for (key, field) in SensorDataSerializer().fields.items()
