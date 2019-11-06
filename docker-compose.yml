@@ -82,6 +82,10 @@ services:
       - ./.secrets:/.secrets
     env_file:
       - "env.${BUILD_TARGET:-development}"
+    secrets:
+      - jks
+      - schema_jks
+      - p12
 
   ksql-client:
     image: confluentinc/cp-ksql-cli:5.3.0
@@ -190,3 +194,11 @@ volumes:
   elasticsearch-data:
   kafka-sink-db-data:
   datahubhel-db-data:
+
+secrets:
+  jks:
+    file: ./.secrets/client.truststore.jks
+  p12:
+    file: ./.secrets/client.keystore.p12
+  schema_jks:
+    file: ./.secrets/schema_registry.truststore.jks
