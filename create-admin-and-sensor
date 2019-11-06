@@ -1,0 +1,22 @@
+#!/bin/bash
+echo "
+import django.contrib.auth
+from datahubhel.core.models import Location, Sensor, Thing
+from ta120_adapter.models import TA120Sensor
+
+um = django.contrib.auth.get_user_model()
+um.objects.create_superuser('admin', '', 'admin')
+
+location = Location.objects.create(name='Turku')
+sensor = Sensor.objects.create(name='ta120NoiseSensor')
+thing = Thing.objects.create(sts_id=1, name='Some thing', location=location)
+
+ta120sensor = TA120Sensor.objects.create(
+    thing=thing,
+    sensor=sensor,
+    key='avain',
+    id_sensor='sensori',
+)
+
+print(f'Created sensor with id {ta120sensor.id_sensor!r} and key {ta120sensor.key!r}')
+" | docker-compose run datahubhel ./manage.py shell

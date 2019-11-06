@@ -1,18 +1,34 @@
-from django.contrib.postgres.fields import JSONField
-from django.db import models
-from django.utils.translation import ugettext_lazy as _
+# This is an auto-generated Django model module.
+# You'll have to do the following manually to clean this up:
+#   * Rearrange models' order
+#   * Make sure each model has one field with primary_key=True
+#   * Make sure each ForeignKey has `on_delete` set to the desired behavior.
+#   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
+# Feel free to rename the models, but don't rename db_table values or field names.
+from django.contrib.gis.db import models
 
 from datahubhel.core.models import Datastream
 
 
 class Observation(models.Model):
-    id = models.CharField(_("id"), max_length=70, primary_key=True)
-    time = models.DateTimeField(_("time"))
-    sensor_id = models.CharField(_("sensor_id"), max_length=50)
-    property_name = models.CharField(_("property_name"), max_length=50)
-    property_value = JSONField()
-    datastream = models.ForeignKey(Datastream, on_delete=models.PROTECT,
-                                   related_name='observations')
+    datastream = models.ForeignKey(
+        Datastream,
+        db_column='DATASTREAM',
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT)
+    time = models.BigIntegerField(
+        db_column='TIME',
+        blank=True,
+        null=True)
+    id = models.TextField(
+        db_column='ID',
+        primary_key=True)
+    value = models.TextField(
+        db_column='VALUE',
+        blank=True,
+        null=True)
 
-    def __str__(self):
-        return f'{self.property_name}-{self.sensor_id}'
+    class Meta:
+        managed = False
+        db_table = 'OBSERVATION'

@@ -3,3 +3,4 @@
 /log/*
 !/log/.gitkeep
 *.py[cdo]
+*.production
