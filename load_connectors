@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker-compose run --rm datahubhel ./manage.py load_ta120_connector
