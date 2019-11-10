@@ -24,7 +24,14 @@ env = environ.Env(
     SENTRY_DSN=(str, ''),
     TUNNISTAMO_ISSUER_URL=(str, ''),  # Default depends on TIER, see below
     KAFKA_SERVERS=(str, 'localhost:29092'),
-    SCHEMA_REGISTRY_URL=(str, 'http://localhost:8081'),
+    SCHEMA_REGISTRY_URL=(str, 'http://schema-registry:8081'),
+    KAFKA_CONNECT_URL=(str, 'http://kafka-connector:8083'),
+    KSQL_URL=(str, 'http://ksql-server:8088'),
+    SINK_DATABASE_URL=(str, 'postgresql://datahubhel-db:5432/datahubhel'),
+    SINK_DB_PASSWORD=(str, 'datahubhel'),
+    SINK_DB_USERNAME=(str, 'datahubhel'),
+    SINK_TABLE_NAME=(str, 'observation'),
+
 )
 if os.path.exists(env_file):  # pragma: no cover
     env.read_env(env_file)
@@ -51,7 +58,14 @@ RAVEN_CONFIG = {
 }
 
 KAFKA_SERVERS = env.str('KAFKA_SERVERS')
+KAFKA_CONNECT_URL = env.str('KAFKA_CONNECT_URL')
 SCHEMA_REGISTRY_URL = env.str('SCHEMA_REGISTRY_URL')
+KSQL_URL = env.str("KSQL_URL")
+
+SINK_DATABASE_URL = env.str('SINK_DATABASE_URL')
+SINK_DB_PASSWORD = env.str('SINK_DB_PASSWORD')
+SINK_DB_USERNAME = env.str('SINK_DB_USERNAME')
+SINK_TABLE_NAME = env.str('SINK_TABLE_NAME')
 
 var_root = env.path('VAR_ROOT')
 MEDIA_ROOT = var_root('media')
@@ -196,6 +210,11 @@ LOGGING = {
         'datahubhel.mqttauth': {
             'level': 'INFO',
             'handlers': ['file', 'console'],
+            'propagate': False,
+        },
+        'datahubhel.ksql_scripts': {
+            'level': 'INFO',
+            'handlers': ['console'],
             'propagate': False,
         },
     },

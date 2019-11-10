@@ -1,18 +1,11 @@
 import hmac
 
 from django.utils.translation import ugettext as _
-from rest_framework import serializers
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 
-from .models import Sensor
-
-
-class AuthParametersSerializer(serializers.Serializer):
-    k = serializers.CharField(
-        label="key", help_text="API key")
-    i = serializers.CharField(
-        label="device_id", help_text="device identifier")
+from .models import TA120Sensor
+from .serializers import AuthParametersSerializer
 
 
 class SensorUser:
@@ -28,26 +21,24 @@ class SensorUser:
 
 
 class SensorKeyAuthentication(BaseAuthentication):
+    queryset = TA120Sensor.objects.all()
+
     def authenticate(self, request):
-        (sensor_id, key) = self.get_credentials(request)
-        return self.authenticate_credentials(sensor_id, key)
+        (identifier, key) = self.get_credentials(request)
+        return self.authenticate_credentials(identifier, key)
 
     def get_credentials(self, request):
         parser = AuthParametersSerializer(data=request.query_params)
         if not parser.is_valid():
             raise AuthenticationFailed(_('Unable to extract credentials'))
 
-        sensor_id = parser.validated_data['i']
+        identifier = parser.validated_data['i']
         key = parser.validated_data['k']
-        return (sensor_id, key)
+        return (identifier, key)
 
-    def authenticate_credentials(self, sensor_id, key):
-        model = self.get_model()
-        sensor = model.objects.filter(sensor_id=sensor_id).first()
+    def authenticate_credentials(self, identifier, key):
+        sensor = self.queryset.filter(identifier=identifier).first()
         correct_key = sensor.key if sensor else ''
         if hmac.compare_digest(correct_key, key) and correct_key:
             return (SensorUser(sensor), sensor)
         raise AuthenticationFailed(_('Sensor authentication failed'))
-
-    def get_model(self):
-        return Sensor

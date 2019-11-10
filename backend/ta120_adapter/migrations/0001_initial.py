@@ -16,82 +16,34 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('datahubhel', '0002_sensor'),
+        ('datahubhel', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Location',
-            fields=[
-                ('id', models.AutoField(
-                    auto_created=True,
-                    primary_key=True,
-                    serialize=False,
-                    verbose_name='ID')),
-                ('name', models.CharField(
-                    max_length=100, verbose_name='address')),
-                ('description', models.TextField(blank=True)),
-                ('location', django.contrib.gis.db.models.fields.PointField(
-                    blank=True, null=True, srid=4326,
-                    verbose_name='location')),
-            ],
-        ),
-        migrations.CreateModel(
             name='TA120Sensor',
             fields=[
-                ('sensor_ptr', models.OneToOneField(
-                    auto_created=True,
-                    on_delete=django.db.models.deletion.CASCADE,
-                    parent_link=True,
-                    primary_key=True,
-                    serialize=False,
-                    to='datahubhel.Sensor')),
-                ('key', models.CharField(max_length=128)),
-            ],
-            options={
-                'abstract': False,
-            },
-            bases=('datahubhel.sensor',),
-        ),
-        migrations.CreateModel(
-            name='Thing',
-            fields=[
-                ('created', CreationDateTimeField(
-                    auto_now_add=True, verbose_name='created')),
-                ('modified', ModificationDateTimeField(
-                     auto_now=True, verbose_name='modified')),
                 ('id', models.UUIDField(
                     default=uuid.uuid4,
                     editable=False,
                     primary_key=True,
                     serialize=False)),
-                ('name', models.CharField(max_length=60)),
-                ('description', models.TextField(blank=True)),
-            ],
-            options={
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
-            name='ThingLocation',
-            fields=[
                 ('created', CreationDateTimeField(
                     auto_now_add=True, verbose_name='created')),
                 ('modified', ModificationDateTimeField(
                     auto_now=True, verbose_name='modified')),
-                ('id', models.UUIDField(
-                    default=uuid.uuid4,
-                    editable=False,
-                    primary_key=True,
-                    serialize=False)),
-                ('location', models.ForeignKey(
+                ('identifier', models.CharField(max_length=60, unique=True)),
+                ('key', models.CharField(max_length=128)),
+                ('datastreams', models.ManyToManyField(
+                    to='datahubhel.Datastream', blank=True)),
+                ('sensor', models.ForeignKey(
+                    to='datahubhel.Sensor',
                     on_delete=django.db.models.deletion.PROTECT,
-                    related_name='thinglocations',
-                    to='ta120_adapter.Location')),
+                    related_name='+')),
                 ('thing', models.ForeignKey(
+                    to='datahubhel.Thing',
                     on_delete=django.db.models.deletion.PROTECT,
-                    related_name='thinglocations',
-                    to='ta120_adapter.Thing')),
+                    related_name='+')),
             ],
             options={
                 'abstract': False,
