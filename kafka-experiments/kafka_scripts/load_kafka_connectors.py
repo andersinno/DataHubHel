@@ -62,6 +62,32 @@ SINK_CONFIGURATIONS = {
         "key.ignore": True,
         "schema.ignore": True
     },
+    "enriched-observation-sink": {
+        "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",
+        "topics": settings.LOCATION_ENRICHED_OBS,
+        "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+        "value.converter": "io.confluent.connect.avro.AvroConverter",
+        "value.converter.schema.registry.url": settings.SCHEMA_REGISTRY_URL,
+        "connection.url": "jdbc:" + settings.SINK_DATABASE_URL,
+        "connection.user": "postgres",
+        "connection.password": "postgres",
+        "auto.create": "true",
+        "auto.evolve": "true",
+        "insert.mode": "upsert",
+        "pk.mode": "record_value",
+        "pk.fields": "ID"
+    },
+    "datahubhel-source": {
+        "connector.class": "io.confluent.connect.jdbc.JdbcSourceConnector",
+        "connection.url": "jdbc:" + settings.SOURCE_DATABASE_URL,
+        "connection.user": "datahubhel",
+        "connection.password": "datahubhel",
+        "topic.prefix": "ta120_",
+        "mode": "bulk",
+        "table.whitelist": "datahubhel_datastream, \
+            datahubhel_thing, \
+            datahubhel_location",
+    }
 }
 
 

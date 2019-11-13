@@ -8,8 +8,8 @@ def main():
     if not wait_for_services():
         raise SystemExit('Cannot init, since services did not come up')
     map_lat_lng_to_geopoints()
-    create_ksql_streams()
     load_kafka_connectors()
+    create_ksql_streams()
 
 
 if __name__ == '__main__':
