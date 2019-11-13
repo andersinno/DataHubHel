@@ -4,6 +4,7 @@ from .views import (
     ServicePermissionsViewSet,
     ServiceTokenViewSet,
     ServiceViewSet,
+    SubscriptionViewSet,
 )
 
 router = routers.SimpleRouter()
@@ -16,5 +17,9 @@ router.register(
 router.register(
     r'servicepermissions', ServicePermissionsViewSet,
     base_name='servicepermission')
+router.register(
+    r'subscriptions', SubscriptionViewSet,
+    base_name='subscription'
+)
 
 urlpatterns = router.urls

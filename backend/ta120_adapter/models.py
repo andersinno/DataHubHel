@@ -1,43 +1,25 @@
-from django.contrib.gis.db import models
-from django.utils.translation import ugettext_lazy as _
+from typing import Mapping
+
+from django.db import models
 
 from datahubhel.base_models import TimestampedUUIDModel
-from datahubhel.core.models import Sensor
+from datahubhel.core.models import Datastream, Sensor, Thing
 
 
-class Location(models.Model):
-    name = models.CharField(verbose_name=_("address"), max_length=100)
-    description = models.TextField(blank=True)
-    location = models.PointField(
-        verbose_name=_("location"),
-        null=True,
+class TA120Sensor(TimestampedUUIDModel):
+    identifier = models.CharField(max_length=60, unique=True)
+    key = models.CharField(max_length=128)
+    datastreams = models.ManyToManyField(
+        Datastream,
         blank=True)
-
-    def __str__(self):
-        return self.name
-
-
-class Thing(TimestampedUUIDModel):
-    name = models.CharField(max_length=60)
-    description = models.TextField(blank=True)
-
-    def __str__(self):
-        return self.name
-
-
-class ThingLocation(TimestampedUUIDModel):
-    location = models.ForeignKey(
-        Location,
-        related_name='thinglocations',
+    sensor = models.ForeignKey(
+        Sensor,
+        related_name='+',
         on_delete=models.PROTECT)
     thing = models.ForeignKey(
         Thing,
-        related_name='thinglocations',
+        related_name='physical_sensors',
         on_delete=models.PROTECT)
 
-    def __str__(self):
-        return "{}--{}".format(self.location.name, self.thing.name)
-
-
-class TA120Sensor(Sensor):
-    key = models.CharField(max_length=128)
+    def get_datastream_map(self) -> Mapping[str, int]:
+        return dict(self.datastreams.values_list('name', 'pk'))

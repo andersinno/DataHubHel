@@ -1,18 +1,20 @@
-from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 
 from datahubhel.core.models import Datastream
 
 
 class Observation(models.Model):
-    id = models.CharField(_("id"), max_length=70, primary_key=True)
-    time = models.DateTimeField(_("time"))
-    sensor_id = models.CharField(_("sensor_id"), max_length=50)
-    property_name = models.CharField(_("property_name"), max_length=50)
-    property_value = JSONField()
-    datastream = models.ForeignKey(Datastream, on_delete=models.PROTECT,
-                                   related_name='observations')
+    id = models.TextField(db_column="id", primary_key=True)
+    time = models.BigIntegerField(db_column="time", blank=True, null=True)
+    datastream = models.ForeignKey(
+        Datastream,
+        db_column="datastream",
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT,
+    )
+    value = models.TextField(db_column="value", blank=True, null=True)
 
-    def __str__(self):
-        return f'{self.property_name}-{self.sensor_id}'
+    class Meta:
+        managed = False
+        db_table = "observation"

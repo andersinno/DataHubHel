@@ -85,3 +85,16 @@ class ServiceToken(TimeStampedModel):
 
     def __str__(self):
         return self.service.identifier
+
+
+class Subscription(TimeStampedModel):
+    subscriber = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE)
+    service = models.ForeignKey(
+        Service,
+        on_delete=models.CASCADE,
+        related_name='subscriptions')
+
+    def __str__(self):
+        return f'{self.subscriber}-{self.service}'
